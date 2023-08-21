@@ -11,7 +11,7 @@ const Navbar = () => {
     const handleMobileNavClick = () => {
         setMobileNavOpen(!mobileNavOpen);
     };
-
+ 
     const closeMobileNav = () => {
         setMobileNavOpen(false);
     };
