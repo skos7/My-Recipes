@@ -15,7 +15,7 @@ const Navbar = () => {
     const closeMobileNav = () => {
         setMobileNavOpen(false);
     };
-
+ 
     const logout = () => {
         setCookies("access_token", "");
         window.localStorage.removeItem("userID");
