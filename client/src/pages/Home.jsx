@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
-import videoBackground from '../assets/Homepage.mp4';
+import imageBackground from '../assets/food3.jpg';
 import { useGetUserID } from '../hooks/useGetUserID';
 import { useCookies } from 'react-cookie';
 
@@ -72,10 +72,12 @@ const Home = () => {
 
   return (
     <div className="relative min-h-screen bg-gray-100">
-      {/* Video Background */}
-      <video className="absolute w-full h-full object-cover" autoPlay muted loop>
-        <source src={videoBackground} type="video/mp4" />
-      </video>
+      {/* Img Background */}
+      <img
+        src={imageBackground}
+        alt="Background"
+        className="absolute w-full h-full object-cover"
+      />
 
       {/* Content */}
       <div className="flex justify-center items-center relative z-10 p-14">
