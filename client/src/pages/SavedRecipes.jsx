@@ -52,48 +52,50 @@ const SavedRecipes = () => {
       />
 
       {/* Content */}
-      <div className="flex justify-center items-center relative z-10 p-14">
-        <h1 className="text-4xl font-bold text-white absolute top-0 left-0 right-0 mt-15 text-center">
+      <div className="flex justify-center items-center relative p-14">
+        <h1 className="text-4xl md:text-5xl font-bold text-white absolute top-0 left-0 right-0 text-center">
           Spremljeni recepti
-        </h1>        <ul className="border bg-white border-black">
+        </h1>
+        <ul className="border bg-white border-black w-full md:max-w-4xl">
           {savedRecipes.map((recipe) => (
-            <li key={recipe._id} className="mb-4 p-6 border-4 border-black rounded">
-              {/* {savedRecipes.includes(recipe._id) && <h1 className='text-xl font-semibold text-red-500'>Recept je već spemljen</h1>} */}
+            <li key={recipe._id} className="p-6 border-4 border-black rounded">
+              {/* {savedRecipes.includes(recipe._id) && <h1 className='text-xl font-semibold text-red-500'>Recept je već spremljen</h1>} */}
               <div className="text-center mb-2">
-                <h2 className="text-xl font-semibold">{recipe.name}</h2>
+                <h2 className="text-xl md:text-2xl font-semibold">{recipe.name}</h2>
               </div>
               <img
                 src={recipe.imageUrl}
                 alt={recipe.name}
-                className="mx-auto w-full h-96 object-cover rounded"
+                className="mx-auto w-full h-auto md:h-96 object-cover rounded cursor-pointer"
                 onClick={() => openModal(recipe)}
               />
-              <p className="text-center text-xl font-semibold">Vrijeme kuhanja: {recipe.cookingTime} (minuta)</p>
+              <p className="text-center text-lg md:text-xl font-semibold mt-2">
+                Vrijeme kuhanja: {recipe.cookingTime} (minuta)
+              </p>
             </li>
-
           ))}
         </ul>
         {isModalOpen && selectedRecipe && (
           <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-75">
-            <div className="bg-white p-12 rounded-lg max-w-2xl w-full">
-              <h2 className="text-3xl font-semibold mb-4">{selectedRecipe.name}</h2>
-              <p className="mb-4">Sastojci: {selectedRecipe.ingredients.join(', ')}</p>
+            <div className="bg-white p-6 rounded-lg max-w-2xl w-full md:max-w-3xl">
+              <h2 className="text-3xl md:text-4xl font-semibold mb-4">{selectedRecipe.name}</h2>
+              <p className="mb-4"> <strong>Sastojci:</strong> {selectedRecipe.ingredients.join(', ')}</p>
               <img
                 src={selectedRecipe.imageUrl}
                 alt={selectedRecipe.name}
-                className="mx-auto w-full h-96 object-cover rounded"
+                className="mx-auto w-full h-auto md:h-96 object-cover rounded"
               />
-              <p className="mb-2">Postupak izrade jela: {selectedRecipe.instructions}</p>
-              <p>Vrijeme pripreme (minute): {selectedRecipe.cookingTime}</p>
-              <div className="flex justify-between">
+              <p className="mb-2"> <strong>Postupak izrade jela:</strong> {selectedRecipe.instructions}</p>
+              <p><strong> Vrijeme pripreme:</strong> {selectedRecipe.cookingTime} min</p>
+              <div className="flex justify-between mt-6">
                 <button
-                  className="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                   onClick={() => setIsModalOpen(false)}
                 >
                   Zatvori
                 </button>
                 <button
-                  className="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                   onClick={() => handleDeleteRecipe(selectedRecipe._id)}
                 >
                   Izbriši
@@ -103,6 +105,7 @@ const SavedRecipes = () => {
           </div>
         )}
       </div>
+
     </div>
   );
 }

@@ -102,7 +102,7 @@ const CreateRecipes = () => {
           className="absolute w-full h-full object-cover"
         />
       </div>
-      <div className="absolute w-full max-w-lg p-6 bg-white rounded-lg shadow-md">
+      <div className="absolute w-full max-w-2xl p-6 bg-white rounded-3xl shadow-md">
         <form onSubmit={onSubmit}>
           <div className="mb-4">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
