@@ -2,8 +2,8 @@ import express from 'express';
 import { RecipeModel } from '../models/Recipes.js';
 import { UserModel } from '../models/Users.js';
 import { verifyToken } from './users.js';
-// import multer from 'multer';
-// import path from 'path';
+import path from 'path';
+import multer from 'multer'; // Import multer
 
 const router = express.Router();
 
@@ -78,27 +78,35 @@ router.delete("/savedRecipes/:userID/:recipeID", async (req, res) => {
     }
 });
 
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, 'public/uploads/') // Update the directory where you want to save the images
-//     },
-//     filename: function (req, file, cb) {
-//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-//         const fileExtension = path.extname(file.originalname);
-//         cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension);
-//     }
-// });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/'); // Set the destination folder for uploads
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
 
-// const upload = multer({ storage: storage });
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 1024 * 1024 * 50, // Increase the limit to 50 MB or as needed
+    },
+});
 
-// router.post("/uploadImage", verifyToken, upload.single('image'), (req, res) => {
-//     try {
-//         const imageUrl = `http://localhost:3001/uploads/${req.file.filename}`; // Update with your server's URL and path
-//         res.json({ imageUrl });
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// });
+/** POST: http://localhost:3001/uploads */
+router.post("/uploads", upload.single('myFile'), async (req, res) => {
+    try {
+        const newImage = new RecipeModel({
+            imageUrl: req.file.path,
+        });
+        await newImage.save();
+        res.status(201).json({ msg: "New image uploaded...!" });
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+});
+
 
 
 export { router as recipesRouter };

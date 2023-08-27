@@ -5,12 +5,22 @@ import { useGetUserID } from '../hooks/useGetUserID';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
+const url = "http://localhost:3001/uploads"
+
 const CreateRecipes = () => {
+
   const userID = useGetUserID();
   const [cookies, _] = useCookies(["access_token"]);
-  // const [selectedFile, setSelectedFile] = useState(null);
-  // const [base64, setBase64] = useState("");
-  const [fileName, setFileName] = useState("");
+
+  const [postImage, setPostImage] = useState({ myFile: "" })
+
+  const createPost = async (newImage) => {
+    try {
+      await axios.post(url, newImage)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const [recipe, setRecipe] = useState({
     name: "",
@@ -57,6 +67,8 @@ const CreateRecipes = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
+    createPost(postImage);
+    console.log("Uploaeded:", postImage);
     console.log("Submitting recipe:", recipe);
     try {
       await axios.post("http://localhost:3001/recipes", recipe, {
@@ -69,83 +81,13 @@ const CreateRecipes = () => {
     }
   }
 
-  // const onSubmit = async (event) => {
-  //   event.preventDefault();
-  
-  //   // First, handle the file upload to obtain the image URL
-  //   const formData = new FormData();
-  //   formData.append("image", selectedFile); // Replace 'selectedFile' with the actual variable where you stored the selected file
-  
-  //   try {
-  //     const response = await axios.post("http://localhost:3001/recipes/uploadImage", formData, {
-  //       headers: { authorization: cookies.access_token },
-  //     });
-      
-  //     // Get the generated image URL from the response
-  //     const imageUrl = response.data.imageUrl;
-  
-  //     // Create the recipe object with the image URL
-  //     const updatedRecipe = {
-  //       ...recipe,
-  //       imageUrl: imageUrl,
-  //     };
-  
-  //     // Make the POST request to create the recipe
-  //     await axios.post("http://localhost:3001/recipes", updatedRecipe, {
-  //       headers: { authorization: cookies.access_token },
-  //     });
-  
-  //     alert("Recipe Created!");
-  //     navigate("/");
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
-  // const handleFileSubmit = (e) => {
-  //   e.preventDefault();
-  //   let data = {
-  //     name: fileName,
-  //     base64Data: base64
-  //   };
-
-  //   dispatch(CreateFile(data)).then((result) => {
-  //     if (isFulfilled(result)) {
-  //       handleFileReset();
-  //     }
-  //   });
-  // }
-
-  // const handleFileReset = () => {
-  //   setFileName("");
-  //   setBase64("");
-  // }
-
-  // const handleFileInput = (e) => {
-  //   let file = e.target.files[0];
-  //   if (file == null) return;
-  //   setFileName(file.name);
-  //   setSelectedFile(file); // Update the selectedFile state
-
-  //   getBase64(file).then(result => {
-  //     let base = result.split("base64,")[1];
-  //     setBase64(base);
-  //   });
-  // }
-
-  // const getBase64 = (file) => {
-  //   return new Promise(resolve => {
-  //     let baseURL = "";
-  //     let reader = new FileReader();
-
-  //     reader.readAsDataURL(file);
-
-  //     reader.onload = () => {
-  //       baseURL = reader.result;
-  //       resolve(baseURL);
-  //     };
-  //   });
-  // };
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertToBase64(file);
+    console.log(base64);
+    setPostImage({ ...postImage, myFile: base64 })
+    setRecipe({ ...recipe, imageUrl: base64 });
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -236,40 +178,15 @@ const CreateRecipes = () => {
             ></textarea>
           </div>
           <div className="mb-4">
-            <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">
-              URL slike - copy image address(na web-u)
-            </label>
-            <input
-              type="text"
-              id="imageUrl"
-              name="imageUrl"
-              className="mt-1 p-2 border border-black rounded-md w-full focus:outline-none focus:ring focus:border-blue-300"
-              onChange={handleChange}
-            />
-          </div>
-          {/* <div className="mb-4">
-            <label htmlFor="fileInput" className="block text-sm font-medium text-gray-700">
-              Choose File
-            </label>
             <input
               type="file"
-              id="fileInput"
-              name="fileInput"
-              className="mt-1 p-2 border border-black rounded-md w-full focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFileInput(e)}
+              lable="Image"
+              name="myFile"
+              id='file-upload'
+              accept='.jpeg, .png, .jpg'
+              onChange={(e) => handleFileUpload(e)}
             />
-            {fileName && (
-              <div className="mt-2">
-                <p>Selected File: {fileName}</p>
-                <button onClick={handleFileSubmit} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">
-                  Upload
-                </button>
-                <button onClick={handleFileReset} className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md">
-                  Reset
-                </button>
-              </div>
-            )}
-          </div> */}
+          </div>
           <div className="mb-4">
             <label htmlFor="cookingTime" className="block text-sm font-medium text-gray-700">
               Vrijeme pripreme (minute)
@@ -296,3 +213,16 @@ const CreateRecipes = () => {
 }
 
 export default CreateRecipes;
+
+function convertToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload = () => {
+      resolve(fileReader.result)
+    };
+    fileReader.onerror = (error) => {
+      reject(error)
+    }
+  })
+}
