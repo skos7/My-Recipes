@@ -122,7 +122,7 @@ const Home = () => {
                 className="mx-auto w-full h-96 object-cover rounded"
               />
               <p className="mb-2">Postupak izrade jela: {selectedRecipe.instructions}</p>
-              <p>Vrijeme pripreme (minute): {selectedRecipe.cookingTime}</p>
+              <p>Vrijeme pripreme: {selectedRecipe.cookingTime} min</p>
               <div className="flex justify-between">
                 <button
                   className="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
