@@ -58,7 +58,7 @@ const SavedRecipes = () => {
         </h1>
         <ul className="border bg-white border-black w-full md:max-w-4xl">
           {savedRecipes.map((recipe) => (
-            <li key={recipe._id} className="p-6 border-4 border-black rounded">
+            <li key={recipe._id} className="p-2 border-4 border-black rounded">
               {/* {savedRecipes.includes(recipe._id) && <h1 className='text-xl font-semibold text-red-500'>Recept je već spremljen</h1>} */}
               <div className="text-center mb-2">
                 <h2 className="text-xl md:text-2xl font-semibold">{recipe.name}</h2>

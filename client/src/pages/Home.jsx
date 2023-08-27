@@ -6,7 +6,7 @@ import { useGetUserID } from '../hooks/useGetUserID';
 import { useCookies } from 'react-cookie';
 
 const Home = () => {
-  
+
   const [recipes, setRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -76,7 +76,7 @@ const Home = () => {
       <div className="flex flex-col items-center relative p-14">
         <ul className="border bg-white border-black w-full md:max-w-4xl">
           {recipes.map((recipe) => (
-            <li key={recipe._id} className="p-3 border-4 border-black rounded">
+            <li key={recipe._id} className="p-2 border-4 border-black rounded">
               <div className="text-center mb-2">
                 <h2 className="text-2xl md:text-3xl font-semibold">{recipe.name}</h2>
               </div>
